@@ -1,0 +1,114 @@
+/* MODELO TESTE — desktop, arte sem corte e com rolagem em duas direções.
+ * As três imagens têm 2560 x 1440 px e usam o mesmo holograma.
+ * O modelo e o fundo compartilham o MESMO sistema de coordenadas.
+ */
+:root {
+  --page-bg: #101927;
+  --art-width: 2560px;
+  --art-height: 1440px;
+
+  /* Coordenadas da janela 3D dentro da imagem ORIGINAL de 2560 x 1440.
+   * Preservam a posição e as proporções do projeto original em 1920 x 1080:
+   * janela antiga = (x:736, y:225, largura:448, altura:665) px na tela;
+   * arte antiga   = 1920 x 1080 = 75% de 2560 x 1440.
+   */
+  --model-left: 981.333px;
+  --model-top: 300px;
+  --model-width: 597.333px;
+  --model-height: 886.667px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--page-bg);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden; /* A rolagem fica no painel de tela cheia abaixo. */
+}
+
+/* Rolagem NATIVA do navegador em ambos os eixos, quando necessária.
+ * Rolagem pelas barras, rodinha do mouse, trackpad ou touchpad.
+ * O scroll NÃO muda o tamanho da imagem nem o enquadramento do 3D.
+ */
+.scroll-area {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+/* Em telas pequenas, o conteúdo ocupa 2560 x 1440 e transborda.
+ * Em telas grandes, a imagem é centralizada sem ser ampliada nem distorcida.
+ */
+.scroll-space {
+  width: max(100%, var(--art-width));
+  height: max(100%, var(--art-height));
+  display: grid;
+  place-items: center;
+}
+
+.card-stage {
+  position: relative;
+  width: var(--art-width);
+  height: var(--art-height);
+  flex-shrink: 0;
+  isolation: isolate;
+}
+
+/* Arte integral no tamanho nativo; sem cover, zoom ou recorte. */
+.card-art {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* A janela 3D se move COM a imagem, e nunca com o monitor. */
+.model-window {
+  position: absolute;
+  z-index: 2;
+  left: var(--model-left);
+  top: var(--model-top);
+  width: var(--model-width);
+  height: var(--model-height);
+  background: transparent;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+}
+
+.model-window:active { cursor: grabbing; }
+
+model-viewer {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  --poster-color: transparent;
+}
+
+/* As artes mobile ainda não foram criadas.
+ * Por enquanto, inclusive em telas estreitas, a versão desktop fica
+ * inteira acessível por rolagem, sem ser reduzida nem substituída.
+ */
+
+/* Cursor personalizado: mantém-se reservado para a última etapa.
+@media (hover: hover) and (pointer: fine) {
+  .model-window { cursor: url("../assets/cursor/cursor.png") 16 16, grab; }
+  .model-window:active { cursor: url("../assets/cursor/cursor.png") 16 16, grabbing; }
+}
+*/

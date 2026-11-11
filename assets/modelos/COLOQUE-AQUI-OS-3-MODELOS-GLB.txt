@@ -1,0 +1,1 @@
+Coloque aqui modelo-01.glb, modelo-02.glb e modelo-03.glb exportados do Blender.
